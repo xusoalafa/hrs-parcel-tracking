@@ -1,0 +1,207 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: 'http://localhost:8080'
+    description: HRS Parcel Tracking
+paths:
+  /guests:
+    get:
+      tags:
+        - guest-controller
+      operationId: getAllGuest
+      summary: Retrieve all guests
+      description: Provides an API to retrieve the complete list of guests without any filters.
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuestResponse'
+    post:
+      tags:
+        - guest-controller
+      operationId: createPreBookGuest
+      summary: Insert guest information
+      description: Inserts a Guest’s information when they make a presentation. Default values are set for checkedOut, checkedIn, and parcelAvailable.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestCreateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+  '/guests/{id}/update-parcel-status':
+    patch:
+      tags:
+        - guest-controller
+      operationId: updateParcelStatus
+      summary: Update parcel availability status
+      description: Updates the parcelAvailable flag to true when the receptionist receives a parcel. Also updates parcelAvailable to false when the guest picks it up.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParcelAvailableRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+  '/guests/{id}/check-out':
+    patch:
+      tags:
+        - guest-controller
+      operationId: updateCheckOutStatus
+      summary: Update guest check-out status
+      description: Sets the checkedOut flag to true when a Guest checks out.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCheckOutRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+  '/guests/{id}/check-in':
+    patch:
+      tags:
+        - guest-controller
+      operationId: updateCheckInStatus
+      summary: Update guest check-in status
+      description: Sets the checkedIn flag to true when a Guest checks in.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCheckInRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+  /guests/available-guests:
+    get:
+      tags:
+        - guest-controller
+      operationId: getAvailableGuestsByName
+      summary: Retrieve checked-in guests
+      description: Retrieves a list of guests who have checked in (checkedIn = true). Supports filtering by name for receptionist verification before parcel pickup.
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuestResponse'
+components:
+  schemas:
+    GuestCreateRequest:
+      required:
+        - firstName
+        - lastName
+        - phoneNumber
+        - roomNumber
+      type: object
+      properties:
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        phoneNumber:
+          pattern: '^[0-9]{10}$'
+          type: string
+          example: '1234567890'
+        roomNumber:
+          maxLength: 10
+          minLength: 0
+          type: string
+    GuestResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        checkedOut:
+          type: boolean
+        checkedIn:
+          type: boolean
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phoneNumber:
+          type: string
+        roomNumber:
+          type: string
+        parcelAvailable:
+          type: boolean
+    UpdateParcelAvailableRequest:
+      type: object
+      properties:
+        parcelAvailable:
+          type: boolean
+    UpdateCheckOutRequest:
+      type: object
+      properties:
+        checkedOut:
+          type: boolean
+    UpdateCheckInRequest:
+      type: object
+      properties:
+        checkedIn:
+          type: boolean
