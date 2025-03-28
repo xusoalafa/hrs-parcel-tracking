@@ -92,7 +92,7 @@ http://localhost:8080
 **Error Handling:** If the guest has an available parcel but attempts to check out, the system will return an error:
 ```json
 {
-  "The guest has an available parcel. Return the parcel to the guest and update its status before checkout."
+  "message": "The guest has an available parcel. Return the parcel to the guest and update its status before checkout."
 }
 ```
 #### Request Example:
@@ -111,11 +111,11 @@ http://localhost:8080
 
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/xusoalafa/hrs-parcel-tracking.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd guest-management-api
+   cd hrs-parcel-tracking
    ```
 3. Start the application:
    ```sh
