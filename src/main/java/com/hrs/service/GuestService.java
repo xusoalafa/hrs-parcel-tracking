@@ -59,18 +59,6 @@ public class GuestService {
   }
 
   @Transactional
-  public GuestResponse update(final GuestCreateRequest request) {
-    // Map DTO to Entity
-    Guest guest = GuestMapper.INSTANCE.toGuest(request);
-
-    // Save entity to DB
-    Guest savedGuest = guestRepository.save(guest);
-
-    // Convert entity to response DTO
-    return GuestMapper.INSTANCE.toGuestResponse(savedGuest);
-  }
-
-  @Transactional
   public GuestResponse updateParcelAvailable(Long id, UpdateParcelAvailableRequest request) {
     Guest guest =
         guestRepository
