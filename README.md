@@ -34,7 +34,7 @@ http://localhost:8080
 ### 2. Insert Guest Information
 **Endpoint:** `POST /guests`
 
-**Description:** Inserts guest information when they arrive.
+**Description:** Inserts a Guest’s information when they make a presentation
 
 #### Request Example:
 ```json
